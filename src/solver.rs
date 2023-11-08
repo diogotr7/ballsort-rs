@@ -17,7 +17,7 @@ pub struct Solver {
 }
 
 impl Solver {
-    pub fn new(puzzle: &Puzzle) -> Self {
+    pub fn new(puzzle: Puzzle) -> Self {
         const N_NOTDECREASE: usize = 1000;
         let n_colors = puzzle.n_colors;
         let n_empty_vials = puzzle.n_empty_vials;
@@ -36,7 +36,7 @@ impl Solver {
         }
 
         Solver {
-            puzzle: puzzle.clone(),
+            puzzle,
             state,
             n_colors,
             n_empty_vials,
@@ -75,9 +75,7 @@ impl Solver {
 
         while x != 0 || y != 0 {
             let nodes = &self.state[x][y];
-            for i in 0..nodes.len() {
-                let test_node = &nodes[i];
-
+            for test_node in nodes {
                 let mut source_index = 0;
                 while test_node[source_index].position != src {
                     source_index += 1;

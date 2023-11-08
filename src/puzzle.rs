@@ -1,7 +1,7 @@
 use crate::constants::BallType;
 use rand::Rng;
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct Puzzle {
     pub vials: Vec<Vec<BallType>>,
     pub n_colors: usize,
@@ -56,11 +56,7 @@ impl Puzzle {
         }
 
         for _ in vial_count_full..vial_count {
-            let mut vial: Vec<BallType> = Vec::new();
-            for _ in 0..vial_depth {
-                vial.push(0);
-            }
-            vials.push(vial);
+            vials.push(vec![0; vial_depth as usize]);
         }
 
         for i in 1..vial_count_full as usize * vial_depth as usize - 1 {

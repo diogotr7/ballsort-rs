@@ -1,4 +1,4 @@
-use crate::constants::{BallType, MAX_VIALS, MAX_VIAL_SIZE};
+use crate::constants::{BallType, MAX_VIALS};
 use crate::move_info::MoveInfo;
 use crate::puzzle::Puzzle;
 use crate::r#move::Move;
@@ -7,7 +7,7 @@ use std::collections::HashMap;
 use std::i64;
 use std::ops::{Index, IndexMut};
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug)]
 pub struct Node {
     vials: [Vial; MAX_VIALS],
     pub length: usize,
@@ -19,20 +19,14 @@ impl Index<usize> for Node {
     type Output = Vial;
 
     fn index(&self, index: usize) -> &Self::Output {
-        if index >= self.length {
-            panic!("Index out of bounds");
-        }
-
+        debug_assert!(index < self.length);
         &self.vials[index]
     }
 }
 
 impl IndexMut<usize> for Node {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        if index >= self.length {
-            panic!("Index out of bounds");
-        }
-
+        debug_assert!(index < self.length);
         &mut self.vials[index]
     }
 }
@@ -47,8 +41,8 @@ impl Node {
             Vial::new(vial_depth, pos)
         });
 
-        for i in 0..vial_count {
-            for j in 0..vial_depth {
+        for i in 0..puzzle.vials.len() {
+            for j in 0..puzzle.vials[0].len() {
                 vials[i][j] = puzzle.vials[i][j];
             }
         }
@@ -78,15 +72,7 @@ impl Node {
         flag: bool,
     ) -> Node {
         //copy the data we already have before
-        let mut vials: [Vial; MAX_VIALS] = std::array::from_fn(|position| {
-            Vial::new(self.vials[position].depth, self.vials[position].position)
-        });
-
-        for i in 0..MAX_VIALS {
-            for j in 0..MAX_VIAL_SIZE {
-                vials[i][j] = self.vials[i][j];
-            }
-        }
+        let mut vials: [Vial; MAX_VIALS] = self.vials.clone();
 
         let temp = vials[source_vial_index][source_empty_count];
         vials[target_vial_index][target_empty_count - 1] = temp;
@@ -104,6 +90,7 @@ impl Node {
         };
 
         node.sort();
+        
         node.hash = node.hash();
 
         node
@@ -122,9 +109,8 @@ impl Node {
     }
 
     pub fn is_hashed(&self, dict: &mut HashMap<i32, i64>) -> bool {
-        let h = self.hash();
-        let base = h / 64;
-        let offset = h % 64;
+        let base = self.hash / 64;
+        let offset = self.hash % 64;
         let one: i64 = 1;
         let magic = offset & 0x1f;
         let x = one << magic;

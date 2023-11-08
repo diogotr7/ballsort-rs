@@ -12,14 +12,21 @@ use crate::puzzle::Puzzle;
 use solver::Solver;
 
 fn main() {
-    let puzzle = Puzzle::new_parse("big.txt");
-
-    let mut solver = Solver::new(&puzzle);
-
+    
+    // let mut input = String::new();
+    // std::io::stdin().read_line(&mut input).unwrap();
+    // 
+    // loop {
+    //     Solver::new(Puzzle::new_rand(12,2,4)).solve();
+    // }
+    
+    let mut solver = Solver::new(Puzzle::new_parse("big.txt"));
+    
     let now = std::time::Instant::now();
     let solution = solver.solve();
     let elapsed = now.elapsed();
-
-    println!("Solution: {:?}", solution);
+    
+    println!("Nodes: {}", solution.nodes);
+    println!("Moves: {}", solution.moves.len());
     println!("Elapsed: {:?}", elapsed);
 }

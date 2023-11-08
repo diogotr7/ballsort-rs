@@ -3,7 +3,7 @@ use crate::vial_top_info::VialTopInfo;
 use std::cmp::Ordering;
 use std::ops::{Index, IndexMut};
 
-#[derive(Debug, PartialEq, PartialOrd)]
+#[derive(Debug, Clone)]
 pub struct Vial {
     balls: [BallType; MAX_VIAL_SIZE],
     pub position: usize,
@@ -76,30 +76,48 @@ impl Index<usize> for Vial {
     type Output = BallType;
 
     fn index(&self, index: usize) -> &Self::Output {
-        if index >= self.depth {
-            panic!("Index out of bounds");
-        }
-
+        debug_assert!(index < self.depth);
         &self.balls[index]
     }
 }
 
 impl IndexMut<usize> for Vial {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        if index >= self.depth {
-            panic!("Index out of bounds");
-        }
-
+        debug_assert!(index < self.depth);
         &mut self.balls[index]
     }
 }
 
-impl Eq for Vial {}
+impl PartialOrd for Vial {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
 
 impl Ord for Vial {
     fn cmp(&self, other: &Self) -> Ordering {
-        self.position.cmp(&other.position)
+        for i in 0..self.depth {
+            if self[i] < other[i] {
+                return Ordering::Less;
+            }
+
+            if self[i] > other[i] {
+                return Ordering::Greater;
+            }
+        }
+        
+        Ordering::Equal
     }
+}
+
+impl PartialEq for Vial {
+    fn eq(&self, other: &Self) -> bool {
+        self.balls[..self.depth] == other.balls[..other.depth]
+    }
+}
+
+impl Eq for Vial {
+    
 }
 
 impl<'a> IntoIterator for &'a Vial {
