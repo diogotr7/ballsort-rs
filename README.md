@@ -1,7 +1,24 @@
-# ballsort-rs
+# `ballsort-rs`
+### `rust-lang` port of my [C# project](https://github.com/diogotr7/BallSort) as a way to learn the language.  
+> by [`@diogotr7`](https://github.com/diogotr7)    
 
-Rust port of my [C# project](https://github.com/diogotr7/BallSort) as a way to learn the language.
+<div align="center">
 
-This is probably not particularly idiomatic rust, but it's functional and runs in about 1/3 the time of the c# version.
+### 🔴🔵🟢🟣🟡🟠🟤⚫️⚪️  
 
-The goal with writing this in rust is eventually to make a webassembly version of it to create a web version of the solver.
+</div>
+
+
+## 🟧 Disclaimers  
+> _This is probably not particularly idiomatic rust, but it's entirely functional and executes in about 33.33% of the previous runtime from my `C#` version._
+
+## 🟩 Goals
+The use of `Rust` in this port of my previously-`C#` based project is to eventually create a **webassembly version** from this base, allowing me to then finally **deploy a web-based version** of the solver, which would be much more user-friendly and allow the project to be used by many more poeple.  
+
+---
+
+<sup>  
+ 
+**Runtime decreased _at least_** `2x` **in most cases!**    
+
+</sup>
